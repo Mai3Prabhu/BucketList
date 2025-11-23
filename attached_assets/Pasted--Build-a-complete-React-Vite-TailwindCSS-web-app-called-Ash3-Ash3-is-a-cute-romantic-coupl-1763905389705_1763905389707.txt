@@ -1,0 +1,150 @@
+**Build a complete React + Vite + TailwindCSS web app called “Ash3.”
+Ash3 is a cute, romantic, couple-friendly bucket-list website for two people.
+No login or backend. All data must be saved in localStorage.**
+
+---
+
+## 🌸 *Branding + Logo (Important)*
+
+Create a *cute, aesthetic logo* for the Ash3 brand.
+
+*Logo Requirements:*
+
+* Combine *“Ash”* and *“3”* in a creative overlapping style
+* “3” should blend into the letters like a couple in a hug
+* Use soft curves and pastel colors
+* Add tiny sparkles or a small heart for cuteness
+* Main theme color: *#FF80AB (rose pink)*
+* Provide:
+
+  * *SVG file*
+  * *React component* → Logo.jsx
+* Must look adorable, minimal, and couple-friendly
+* Scales well for navbar & mobile
+
+Use this logo in the navbar and splash/home screens.
+
+---
+
+## 🎀 *UI Style Requirements*
+
+Create a *romantic, cute, pastel interface*:
+
+* Soft pink theme (#FF80AB)
+* Rounded corners (20–32px)
+* Heart icons and soft gradients
+* Framer Motion animations everywhere
+* Buttons with bounce/scale animations
+* Confetti animation when an item is completed
+* Use *Poppins* or *Inter* for a soft, clean look
+* Fully responsive (mobile-first)
+
+Make the entire UI feel cozy, warm, and perfect for couples.
+
+---
+
+## 🗂 *Pages to Build*
+
+1. *Dashboard*
+
+   * List of all bucket lists
+   * Cute progress bars
+   * “Add List” button with heart animation
+
+2. *Bucket List Page*
+
+   * Items with checkboxes
+   * Title, description, optional date
+   * Priority labels in cute colors
+   * Completion triggers confetti + heart pop
+
+3. *Completed Items Page*
+
+   * Beautiful grid of completed items
+   * Shows completion dates
+   * Soft celebratory visuals
+
+4. *Activity Feed Page*
+
+   * Logs every action with cute icons
+   * Timeline-style feed
+
+5. *Analytics Page*
+
+   * Total items
+   * Completed items
+   * Progress percentage
+   * Animated statistic cards
+
+6. *Settings Page*
+
+   * “Clear All Data” button
+   * Warning popup
+
+---
+
+## 💾 *Data Storage*
+
+Store everything in localStorage:
+
+Keys:
+
+
+bucketLists
+activityFeed
+
+
+Bucket list schema:
+
+
+{
+ id,
+ title,
+ items: [
+   {
+     id,
+     text,
+     description,
+     priority,
+     targetDate,
+     completed,
+     completedAt
+   }
+ ]
+}
+
+
+---
+
+## 🛠 *Tech Stack*
+
+* React
+* Vite
+* TailwindCSS
+* React Router v6
+* Framer Motion
+* Confetti library (react-confetti or canvas-confetti)
+* LocalStorage for persistence
+
+---
+
+## 📦 *Deliverables*
+
+Generate:
+
+✔ Full React project folder
+✔ Cute “Ash3” overlapping logo (SVG + component)
+✔ All pages + components
+✔ Tailwind setup
+✔ Routing
+✔ LocalStorage logic
+✔ Animations + confetti
+✔ Instructions to run:
+npm install
+npm run dev
+
+---
+
+# ✅ Build the full Ash3 web app now, including the cute animated logo.
+
+--
