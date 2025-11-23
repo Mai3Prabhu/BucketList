@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Heart, Calendar } from "lucide-react";
@@ -17,15 +18,16 @@ const priorityColors = {
   high: "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300",
 };
 
-export default function CompletedItemCard({
+const CompletedItemCard = forwardRef<HTMLDivElement, CompletedItemCardProps>(function CompletedItemCard({
   text,
   description,
   completedAt,
   priority,
   delay = 0,
-}: CompletedItemCardProps) {
+}, ref) {
   return (
     <motion.div
+      ref={ref}
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay, duration: 0.4 }}
@@ -65,4 +67,6 @@ export default function CompletedItemCard({
       </Card>
     </motion.div>
   );
-}
+});
+
+export default CompletedItemCard;

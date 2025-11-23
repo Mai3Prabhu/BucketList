@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { motion } from "framer-motion";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
@@ -22,7 +23,7 @@ const priorityColors = {
   high: "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300",
 };
 
-export default function ChecklistItem({
+const ChecklistItem = forwardRef<HTMLDivElement, ChecklistItemProps>(function ChecklistItem({
   id,
   text,
   description,
@@ -31,7 +32,7 @@ export default function ChecklistItem({
   completed,
   onToggle,
   onDelete,
-}: ChecklistItemProps) {
+}, ref) {
   const handleToggle = () => {
     if (!completed) {
       confetti({
@@ -46,6 +47,7 @@ export default function ChecklistItem({
 
   return (
     <motion.div
+      ref={ref}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, x: -20 }}
@@ -114,4 +116,6 @@ export default function ChecklistItem({
       </div>
     </motion.div>
   );
-}
+});
+
+export default ChecklistItem;

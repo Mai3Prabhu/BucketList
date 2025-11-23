@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { motion } from "framer-motion";
 import { Heart, Sparkles } from "lucide-react";
 
@@ -7,15 +8,16 @@ interface EmptyStateProps {
   icon?: "heart" | "sparkles";
 }
 
-export default function EmptyState({
+const EmptyState = forwardRef<HTMLDivElement, EmptyStateProps>(function EmptyState({
   title,
   description,
   icon = "heart",
-}: EmptyStateProps) {
+}, ref) {
   const Icon = icon === "heart" ? Heart : Sparkles;
 
   return (
     <motion.div
+      ref={ref}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -46,4 +48,6 @@ export default function EmptyState({
       </p>
     </motion.div>
   );
-}
+});
+
+export default EmptyState;

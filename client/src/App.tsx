@@ -49,9 +49,9 @@ function App() {
               <div className="max-w-7xl mx-auto px-4">
                 <div className="flex items-center justify-between h-16">
                   <Link href="/">
-                    <a className="flex items-center" data-testid="link-home">
+                    <div className="flex items-center cursor-pointer" data-testid="link-logo">
                       <Logo />
-                    </a>
+                    </div>
                   </Link>
 
                   <div className="flex items-center gap-1">
@@ -61,31 +61,30 @@ function App() {
                       
                       return (
                         <Link key={item.path} href={item.path}>
-                          <a data-testid={`link-${item.label.toLowerCase().replace(' ', '-')}`}>
-                            <motion.div
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                              className={`relative px-3 py-2 rounded-lg transition-colors ${
-                                isActive
-                                  ? "text-primary font-medium"
-                                  : "text-muted-foreground hover:text-foreground"
-                              }`}
-                            >
-                              <div className="flex items-center gap-2">
-                                <Icon className="h-4 w-4" />
-                                <span className="hidden sm:inline text-sm">
-                                  {item.label}
-                                </span>
-                              </div>
-                              {isActive && (
-                                <motion.div
-                                  layoutId="activeTab"
-                                  className="absolute inset-0 bg-primary/10 rounded-lg -z-10"
-                                  transition={{ type: "spring", duration: 0.5 }}
-                                />
-                              )}
-                            </motion.div>
-                          </a>
+                          <motion.div
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className={`relative px-3 py-2 rounded-lg transition-colors cursor-pointer ${
+                              isActive
+                                ? "text-primary font-medium"
+                                : "text-muted-foreground hover:text-foreground"
+                            }`}
+                            data-testid={`link-${item.label.toLowerCase().replace(' ', '-')}`}
+                          >
+                            <div className="flex items-center gap-2">
+                              <Icon className="h-4 w-4" />
+                              <span className="hidden sm:inline text-sm">
+                                {item.label}
+                              </span>
+                            </div>
+                            {isActive && (
+                              <motion.div
+                                layoutId="activeTab"
+                                className="absolute inset-0 bg-primary/10 rounded-lg -z-10"
+                                transition={{ type: "spring", duration: 0.5 }}
+                              />
+                            )}
+                          </motion.div>
                         </Link>
                       );
                     })}
