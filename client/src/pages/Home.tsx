@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import CoupleHugging from "@/components/CoupleHugging";
 import { Heart, Sparkles, CheckCircle2, TrendingUp } from "lucide-react";
+import hugGif from "@assets/Hug_1763906645911.gif";
 
 export default function Home() {
   return (
@@ -23,12 +23,13 @@ export default function Home() {
               repeat: Infinity,
               repeatType: "reverse",
             }}
-            className="relative mb-8"
+            className="mb-8"
           >
-            <Heart className="h-64 w-64 text-primary fill-current opacity-90" />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <CoupleHugging className="scale-90" />
-            </div>
+            <img 
+              src={hugGif} 
+              alt="Cute couple hugging" 
+              className="w-64 h-64 object-contain"
+            />
           </motion.div>
 
           <motion.div
