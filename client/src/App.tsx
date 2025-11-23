@@ -5,6 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { motion } from "framer-motion";
 import Logo from "@/components/Logo";
+import ThemeToggle from "@/components/ThemeToggle";
+import Home from "@/pages/Home";
 import Dashboard from "@/pages/Dashboard";
 import Completed from "@/pages/Completed";
 import Activity from "@/pages/Activity";
@@ -13,7 +15,7 @@ import Settings from "@/pages/Settings";
 import { Heart, CheckCircle2, Clock, TrendingUp, Settings as SettingsIcon } from "lucide-react";
 
 const navItems = [
-  { path: "/", label: "Bucket List", icon: Heart },
+  { path: "/bucket-list", label: "Bucket List", icon: Heart },
   { path: "/completed", label: "Completed", icon: CheckCircle2 },
   { path: "/activity", label: "Activity", icon: Clock },
   { path: "/analytics", label: "Analytics", icon: TrendingUp },
@@ -23,7 +25,8 @@ const navItems = [
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={Dashboard} />
+      <Route path="/" component={Home} />
+      <Route path="/bucket-list" component={Dashboard} />
       <Route path="/completed" component={Completed} />
       <Route path="/activity" component={Activity} />
       <Route path="/analytics" component={Analytics} />
@@ -34,71 +37,83 @@ function Router() {
 
 function App() {
   const [location] = useLocation();
+  const isHomePage = location === "/";
 
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <div className="min-h-screen bg-gradient-to-br from-pink-50 via-rose-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-          <nav className="sticky top-0 z-50 backdrop-blur-lg bg-background/80 border-b border-border">
-            <div className="max-w-7xl mx-auto px-4">
-              <div className="flex items-center justify-between h-16">
-                <Link href="/">
-                  <a className="flex items-center" data-testid="link-home">
-                    <Logo />
-                  </a>
-                </Link>
+          {!isHomePage && (
+            <nav className="sticky top-0 z-50 backdrop-blur-lg bg-background/80 border-b border-border">
+              <div className="max-w-7xl mx-auto px-4">
+                <div className="flex items-center justify-between h-16">
+                  <Link href="/">
+                    <a className="flex items-center" data-testid="link-home">
+                      <Logo />
+                    </a>
+                  </Link>
 
-                <div className="flex items-center gap-1">
-                  {navItems.map((item) => {
-                    const Icon = item.icon;
-                    const isActive = location === item.path;
-                    
-                    return (
-                      <Link key={item.path} href={item.path}>
-                        <a data-testid={`link-${item.label.toLowerCase()}`}>
-                          <motion.div
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            className={`relative px-3 py-2 rounded-lg transition-colors ${
-                              isActive
-                                ? "text-primary font-medium"
-                                : "text-muted-foreground hover:text-foreground"
-                            }`}
-                          >
-                            <div className="flex items-center gap-2">
-                              <Icon className="h-4 w-4" />
-                              <span className="hidden sm:inline text-sm">
-                                {item.label}
-                              </span>
-                            </div>
-                            {isActive && (
-                              <motion.div
-                                layoutId="activeTab"
-                                className="absolute inset-0 bg-primary/10 rounded-lg -z-10"
-                                transition={{ type: "spring", duration: 0.5 }}
-                              />
-                            )}
-                          </motion.div>
-                        </a>
-                      </Link>
-                    );
-                  })}
+                  <div className="flex items-center gap-1">
+                    {navItems.map((item) => {
+                      const Icon = item.icon;
+                      const isActive = location === item.path;
+                      
+                      return (
+                        <Link key={item.path} href={item.path}>
+                          <a data-testid={`link-${item.label.toLowerCase().replace(' ', '-')}`}>
+                            <motion.div
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              className={`relative px-3 py-2 rounded-lg transition-colors ${
+                                isActive
+                                  ? "text-primary font-medium"
+                                  : "text-muted-foreground hover:text-foreground"
+                              }`}
+                            >
+                              <div className="flex items-center gap-2">
+                                <Icon className="h-4 w-4" />
+                                <span className="hidden sm:inline text-sm">
+                                  {item.label}
+                                </span>
+                              </div>
+                              {isActive && (
+                                <motion.div
+                                  layoutId="activeTab"
+                                  className="absolute inset-0 bg-primary/10 rounded-lg -z-10"
+                                  transition={{ type: "spring", duration: 0.5 }}
+                                />
+                              )}
+                            </motion.div>
+                          </a>
+                        </Link>
+                      );
+                    })}
+                    <ThemeToggle />
+                  </div>
                 </div>
               </div>
-            </div>
-          </nav>
+            </nav>
+          )}
 
-          <main className="pb-8">
+          {isHomePage && (
+            <div className="absolute top-4 right-4 z-50">
+              <ThemeToggle />
+            </div>
+          )}
+
+          <main className={isHomePage ? "" : "pb-8"}>
             <Router />
           </main>
 
-          <motion.div
-            className="fixed bottom-0 right-0 p-4 pointer-events-none"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.3 }}
-          >
-            <Heart className="h-32 w-32 text-primary/20 fill-current" />
-          </motion.div>
+          {!isHomePage && (
+            <motion.div
+              className="fixed bottom-0 right-0 p-4 pointer-events-none"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.3 }}
+            >
+              <Heart className="h-32 w-32 text-primary/20 fill-current" />
+            </motion.div>
+          )}
         </div>
         <Toaster />
       </TooltipProvider>
