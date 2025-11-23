@@ -15,6 +15,7 @@ import Settings from "@/pages/Settings";
 import { Heart, CheckCircle2, Clock, TrendingUp, Settings as SettingsIcon } from "lucide-react";
 
 const navItems = [
+  { path: "/", label: "Home", icon: Heart },
   { path: "/bucket-list", label: "Bucket List", icon: Heart },
   { path: "/completed", label: "Completed", icon: CheckCircle2 },
   { path: "/activity", label: "Activity", icon: Clock },

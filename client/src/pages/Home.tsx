@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import Logo from "@/components/Logo";
+import CoupleHugging from "@/components/CoupleHugging";
 import { Heart, Sparkles, CheckCircle2, TrendingUp } from "lucide-react";
 
 export default function Home() {
@@ -27,7 +27,7 @@ export default function Home() {
           >
             <Heart className="h-64 w-64 text-primary fill-current opacity-90" />
             <div className="absolute inset-0 flex items-center justify-center">
-              <Logo className="scale-125" />
+              <CoupleHugging className="scale-90" />
             </div>
           </motion.div>
 
