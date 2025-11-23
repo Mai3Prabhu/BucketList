@@ -55,12 +55,10 @@ export default function Home() {
           className="flex flex-col sm:flex-row gap-4 justify-center"
         >
           <Link href="/bucket-list">
-            <a>
-              <Button size="lg" className="gap-2 text-lg" data-testid="button-get-started">
-                <Heart className="h-5 w-5 fill-current" />
-                Get Started
-              </Button>
-            </a>
+            <Button size="lg" className="gap-2 text-lg cursor-pointer" data-testid="button-get-started">
+              <Heart className="h-5 w-5 fill-current" />
+              Get Started
+            </Button>
           </Link>
         </motion.div>
 
