@@ -3,8 +3,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import ChecklistItem from "@/components/ChecklistItem";
 import AddItemDialog from "@/components/AddItemDialog";
 import EmptyState from "@/components/EmptyState";
+import Logo from "@/components/Logo";
 import { storage, BucketListItem } from "@/lib/localStorage";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Heart } from "lucide-react";
 
 export default function Dashboard() {
   const [items, setItems] = useState<BucketListItem[]>([]);
@@ -40,8 +41,33 @@ export default function Dashboard() {
     <div className="min-h-full">
       <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
         <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6 }}
+          className="relative flex items-center justify-center py-8"
+        >
+          <motion.div
+            animate={{
+              scale: [1, 1.05, 1],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              repeatType: "reverse",
+            }}
+            className="relative"
+          >
+            <Heart className="h-48 w-48 text-primary fill-current opacity-90" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Logo className="scale-75" />
+            </div>
+          </motion.div>
+        </motion.div>
+
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
           className="text-center space-y-4"
         >
           <h1 className="text-4xl font-bold text-foreground flex items-center justify-center gap-3">
