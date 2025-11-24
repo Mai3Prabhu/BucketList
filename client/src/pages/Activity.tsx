@@ -1,18 +1,28 @@
-import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import ActivityFeedItem from "@/components/ActivityFeedItem";
 import EmptyState from "@/components/EmptyState";
-import { storage, ActivityLog } from "@/lib/localStorage";
-import { Clock } from "lucide-react";
+import { Clock, Sparkles } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import type { ActivityLog } from "@shared/schema";
 
 export default function Activity() {
-  const [activities, setActivities] = useState<ActivityLog[]>([]);
+  const { data: activities = [], isLoading } = useQuery<ActivityLog[]>({
+    queryKey: ["/api/activity"],
+  });
 
-  useEffect(() => {
-    const logs = storage.getActivity();
-    setActivities(logs);
-  }, []);
+  if (isLoading) {
+    return (
+      <div className="min-h-full flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="animate-spin">
+            <Sparkles className="h-8 w-8 text-primary mx-auto" />
+          </div>
+          <p className="text-muted-foreground">Loading activity feed...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-full">
@@ -44,7 +54,7 @@ export default function Activity() {
                 <ActivityFeedItem
                   type={activity.type}
                   text={activity.itemText}
-                  timestamp={activity.timestamp}
+                  timestamp={activity.timestamp?.toISOString?.() || new Date().toISOString()}
                   delay={index * 0.05}
                 />
                 {index < activities.length - 1 && (

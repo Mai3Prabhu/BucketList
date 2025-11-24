@@ -5,7 +5,7 @@ import AddItemDialog from "@/components/AddItemDialog";
 import EmptyState from "@/components/EmptyState";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Sparkles } from "lucide-react";
-import type { BucketListItem, InsertBucketListItem } from "@shared/schema";
+import type { BucketListItem } from "@shared/schema";
 
 export default function Dashboard() {
   const { data: items = [], isLoading } = useQuery<BucketListItem[]>({
@@ -15,7 +15,7 @@ export default function Dashboard() {
   const activeItems = items.filter((item) => !item.completed);
 
   const addMutation = useMutation({
-    mutationFn: (newItem: InsertBucketListItem) =>
+    mutationFn: (newItem: any) =>
       apiRequest("POST", "/api/bucket-list", newItem),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/bucket-list"] });
@@ -38,12 +38,12 @@ export default function Dashboard() {
     },
   });
 
-  const handleAddItem = (newItem: Omit<BucketListItem, "id" | "completed" | "createdAt" | "completedAt">) => {
+  const handleAddItem = (newItem: any) => {
     addMutation.mutate({
       text: newItem.text,
-      description: newItem.description,
-      priority: newItem.priority as "low" | "medium" | "high",
-      targetDate: newItem.targetDate,
+      description: newItem.description || null,
+      priority: newItem.priority || "medium",
+      targetDate: newItem.targetDate || null,
     });
   };
 
@@ -103,6 +103,7 @@ export default function Dashboard() {
                 <ChecklistItem
                   key={item.id}
                   {...item}
+                  description={item.description || undefined}
                   onToggle={handleToggleItem}
                   onDelete={handleDeleteItem}
                 />

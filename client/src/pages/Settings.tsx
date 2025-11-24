@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,22 +13,36 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { storage } from "@/lib/localStorage";
+import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Settings as SettingsIcon, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Settings() {
   const { toast } = useToast();
 
+  const clearMutation = useMutation({
+    mutationFn: async () => {
+      await apiRequest("DELETE", "/api/bucket-list/clear-all", {});
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/bucket-list"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/activity"] });
+      toast({
+        title: "Data cleared",
+        description: "All your bucket list items and activity have been removed.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to clear data. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const handleClearData = () => {
-    storage.clearAll();
-    toast({
-      title: "Data cleared",
-      description: "All your bucket list items and activity have been removed.",
-    });
-    setTimeout(() => {
-      window.location.reload();
-    }, 1000);
+    clearMutation.mutate();
   };
 
   return (
@@ -65,8 +80,8 @@ export default function Settings() {
             <CardContent>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button variant="destructive" data-testid="button-clear-data">
-                    Clear All Data
+                  <Button variant="destructive" data-testid="button-clear-data" disabled={clearMutation.isPending}>
+                    {clearMutation.isPending ? "Clearing..." : "Clear All Data"}
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
@@ -74,7 +89,7 @@ export default function Settings() {
                     <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                     <AlertDialogDescription>
                       This action cannot be undone. This will permanently delete all
-                      your bucket list items and activity history from this device.
+                      your bucket list items and activity history.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
@@ -107,7 +122,7 @@ export default function Settings() {
             </CardHeader>
             <CardContent className="space-y-2 text-sm text-muted-foreground">
               <p>Version 1.0.0</p>
-              <p>All data is stored locally in your browser.</p>
+              <p>All data is securely synced across devices.</p>
               <p>Made with 💕 for couples everywhere</p>
             </CardContent>
           </Card>

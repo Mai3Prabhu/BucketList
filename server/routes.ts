@@ -2,6 +2,8 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertBucketListItemSchema } from "@shared/schema";
+import { db } from "./db";
+import { bucketListItems, activityLogs } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // GET all bucket list items
@@ -42,6 +44,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ success: true });
     } catch (error) {
       res.status(500).json({ error: "Failed to delete item" });
+    }
+  });
+
+  // DELETE all items and activity (clear-all endpoint)
+  app.delete("/api/bucket-list/clear-all", async (_req, res) => {
+    try {
+      await db.delete(bucketListItems);
+      await db.delete(activityLogs);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to clear data" });
     }
   });
 
