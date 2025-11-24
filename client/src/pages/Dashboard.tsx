@@ -1,41 +1,72 @@
-import { useState, useEffect } from "react";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import ChecklistItem from "@/components/ChecklistItem";
 import AddItemDialog from "@/components/AddItemDialog";
 import EmptyState from "@/components/EmptyState";
-import Logo from "@/components/Logo";
-import { storage, BucketListItem } from "@/lib/localStorage";
-import { Sparkles, Heart } from "lucide-react";
+import { queryClient, apiRequest } from "@/lib/queryClient";
+import { Sparkles } from "lucide-react";
+import type { BucketListItem, InsertBucketListItem } from "@shared/schema";
 
 export default function Dashboard() {
-  const [items, setItems] = useState<BucketListItem[]>([]);
-  const [activeItems, setActiveItems] = useState<BucketListItem[]>([]);
+  const { data: items = [], isLoading } = useQuery<BucketListItem[]>({
+    queryKey: ["/api/bucket-list"],
+  });
 
-  useEffect(() => {
-    const allItems = storage.getItems();
-    setItems(allItems);
-    setActiveItems(allItems.filter((item) => !item.completed));
-  }, []);
+  const activeItems = items.filter((item) => !item.completed);
 
-  const handleAddItem = (newItem: Omit<BucketListItem, "id" | "completed" | "createdAt">) => {
-    const added = storage.addItem(newItem);
-    setItems((prev) => [...prev, added]);
-    setActiveItems((prev) => [...prev, added]);
+  const addMutation = useMutation({
+    mutationFn: (newItem: InsertBucketListItem) =>
+      apiRequest("POST", "/api/bucket-list", newItem),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/bucket-list"] });
+    },
+  });
+
+  const toggleMutation = useMutation({
+    mutationFn: (id: string) =>
+      apiRequest("PATCH", `/api/bucket-list/${id}/toggle`, {}),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/bucket-list"] });
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) =>
+      apiRequest("DELETE", `/api/bucket-list/${id}`, {}),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/bucket-list"] });
+    },
+  });
+
+  const handleAddItem = (newItem: Omit<BucketListItem, "id" | "completed" | "createdAt" | "completedAt">) => {
+    addMutation.mutate({
+      text: newItem.text,
+      description: newItem.description,
+      priority: newItem.priority as "low" | "medium" | "high",
+      targetDate: newItem.targetDate,
+    });
   };
 
   const handleToggleItem = (id: string) => {
-    storage.toggleItem(id);
-    const allItems = storage.getItems();
-    setItems(allItems);
-    setActiveItems(allItems.filter((item) => !item.completed));
+    toggleMutation.mutate(id);
   };
 
   const handleDeleteItem = (id: string) => {
-    storage.deleteItem(id);
-    const allItems = storage.getItems();
-    setItems(allItems);
-    setActiveItems(allItems.filter((item) => !item.completed));
+    deleteMutation.mutate(id);
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-full flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="animate-spin">
+            <Sparkles className="h-8 w-8 text-primary mx-auto" />
+          </div>
+          <p className="text-muted-foreground">Loading your bucket list...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-full">
