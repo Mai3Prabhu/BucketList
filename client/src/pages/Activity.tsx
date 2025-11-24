@@ -52,7 +52,7 @@ export default function Activity() {
             {activities.map((activity, index) => (
               <div key={activity.id}>
                 <ActivityFeedItem
-                  type={activity.type}
+                  type={activity.type as "added" | "completed" | "deleted"}
                   text={activity.itemText}
                   timestamp={activity.timestamp?.toISOString?.() || new Date().toISOString()}
                   delay={index * 0.05}

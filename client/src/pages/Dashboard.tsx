@@ -102,8 +102,12 @@ export default function Dashboard() {
               activeItems.map((item) => (
                 <ChecklistItem
                   key={item.id}
-                  {...item}
+                  id={item.id}
+                  text={item.text}
                   description={item.description || undefined}
+                  priority={item.priority as "low" | "medium" | "high" | undefined}
+                  targetDate={item.targetDate || undefined}
+                  completed={item.completed || false}
                   onToggle={handleToggleItem}
                   onDelete={handleDeleteItem}
                 />

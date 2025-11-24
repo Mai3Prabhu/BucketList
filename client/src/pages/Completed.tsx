@@ -1,17 +1,29 @@
-import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
 import CompletedItemCard from "@/components/CompletedItemCard";
 import EmptyState from "@/components/EmptyState";
-import { storage, BucketListItem } from "@/lib/localStorage";
-import { Heart } from "lucide-react";
+import { Heart, Sparkles } from "lucide-react";
+import type { BucketListItem } from "@shared/schema";
 
 export default function Completed() {
-  const [completedItems, setCompletedItems] = useState<BucketListItem[]>([]);
+  const { data: items = [], isLoading } = useQuery<BucketListItem[]>({
+    queryKey: ["/api/bucket-list"],
+  });
 
-  useEffect(() => {
-    const items = storage.getItems().filter((item) => item.completed);
-    setCompletedItems(items);
-  }, []);
+  const completedItems = items.filter((item) => item.completed);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-full flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="animate-spin">
+            <Sparkles className="h-8 w-8 text-primary mx-auto" />
+          </div>
+          <p className="text-muted-foreground">Loading completed items...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-full">
@@ -42,9 +54,9 @@ export default function Completed() {
               <CompletedItemCard
                 key={item.id}
                 text={item.text}
-                description={item.description}
-                completedAt={item.completedAt!}
-                priority={item.priority}
+                description={item.description || undefined}
+                completedAt={item.completedAt?.toISOString?.() || new Date().toISOString()}
+                priority={item.priority as "low" | "medium" | "high" | undefined}
                 delay={index * 0.1}
               />
             ))}
