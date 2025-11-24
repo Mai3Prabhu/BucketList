@@ -2,6 +2,7 @@
   command = "npm run build"
   functions = "dist"
   publish = "dist/public"
+  environment = { VITE_API_URL = "https://web-production-ba609.up.railway.app" }
 
 [[redirects]]
   from = "/api/*"
