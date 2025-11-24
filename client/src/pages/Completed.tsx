@@ -1,13 +1,23 @@
 import { motion } from "framer-motion";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import CompletedItemCard from "@/components/CompletedItemCard";
 import EmptyState from "@/components/EmptyState";
 import { Heart, Sparkles } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { queryClient, apiRequest } from "@/lib/queryClient";
 import type { BucketListItem } from "@shared/schema";
 
 export default function Completed() {
   const { data: items = [], isLoading } = useQuery<BucketListItem[]>({
     queryKey: ["/api/bucket-list"],
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) =>
+      apiRequest("DELETE", `/api/bucket-list/${id}`, {}),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/bucket-list"] });
+    },
   });
 
   const completedItems = items.filter((item) => item.completed);
@@ -53,11 +63,13 @@ export default function Completed() {
             {completedItems.map((item, index) => (
               <CompletedItemCard
                 key={item.id}
+                id={item.id}
                 text={item.text}
                 description={item.description || undefined}
                 completedAt={item.completedAt?.toISOString?.() || new Date().toISOString()}
                 priority={item.priority as "low" | "medium" | "high" | undefined}
                 delay={index * 0.1}
+                onDelete={deleteMutation.mutate}
               />
             ))}
           </div>

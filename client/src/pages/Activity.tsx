@@ -1,14 +1,25 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import ActivityFeedItem from "@/components/ActivityFeedItem";
 import EmptyState from "@/components/EmptyState";
-import { Clock, Sparkles } from "lucide-react";
+import { Clock, Sparkles, Trash2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { queryClient, apiRequest } from "@/lib/queryClient";
 import type { ActivityLog } from "@shared/schema";
 
 export default function Activity() {
   const { data: activities = [], isLoading } = useQuery<ActivityLog[]>({
     queryKey: ["/api/activity"],
+  });
+
+  const clearActivityMutation = useMutation({
+    mutationFn: async () => {
+      await apiRequest("DELETE", "/api/activity/clear", {});
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/activity"] });
+    },
   });
 
   if (isLoading) {
@@ -39,6 +50,20 @@ export default function Activity() {
           <p className="text-muted-foreground">
             A timeline of your bucket list journey
           </p>
+          {activities.length > 0 && (
+            <div className="flex justify-center pt-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => clearActivityMutation.mutate()}
+                disabled={clearActivityMutation.isPending}
+                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Clear Activity
+              </Button>
+            </div>
+          )}
         </motion.div>
 
         {activities.length === 0 ? (

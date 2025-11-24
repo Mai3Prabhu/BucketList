@@ -68,6 +68,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // DELETE clear all activity logs
+  app.delete("/api/activity/clear", async (_req, res) => {
+    try {
+      await db.delete(activityLogs);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to clear activity" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

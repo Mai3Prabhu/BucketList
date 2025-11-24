@@ -1,15 +1,18 @@
 import { forwardRef } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
-import { Heart, Calendar } from "lucide-react";
+import { Heart, Calendar, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 interface CompletedItemCardProps {
+  id: string;
   text: string;
   description?: string;
   completedAt: string;
   priority?: "low" | "medium" | "high";
   delay?: number;
+  onDelete?: (id: string) => void;
 }
 
 const priorityColors = {
@@ -19,11 +22,13 @@ const priorityColors = {
 };
 
 const CompletedItemCard = forwardRef<HTMLDivElement, CompletedItemCardProps>(function CompletedItemCard({
+  id,
   text,
   description,
   completedAt,
   priority,
   delay = 0,
+  onDelete,
 }, ref) {
   return (
     <motion.div
@@ -63,6 +68,20 @@ const CompletedItemCard = forwardRef<HTMLDivElement, CompletedItemCardProps>(fun
               <span>{new Date(completedAt).toLocaleDateString()}</span>
             </div>
           </div>
+
+          {onDelete && (
+            <div className="flex justify-end pt-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onDelete(id)}
+                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+              >
+                <Trash2 className="h-4 w-4 mr-1" />
+                Delete
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
     </motion.div>
