@@ -1,6 +1,7 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
 
-const API_BASE = import.meta.env.VITE_API_URL || '';
+// Use hardcoded production URL or environment variable
+const API_BASE = import.meta.env.VITE_API_URL || 'https://web-production-ba609.up.railway.app';
 
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {
